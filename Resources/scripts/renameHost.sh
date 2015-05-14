@@ -3,6 +3,7 @@
 
 chmod u+w /etc/sudoers
 echo "stackato        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+chmod u-w /etc/sudoers
 
 echo "**** time: `date` | user: `/usr/bin/whoami`" >> /tmp/setup.log
 echo "***** ready?" >> /tmp/setup.log

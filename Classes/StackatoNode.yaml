@@ -57,14 +57,14 @@ Workflow:
           - $resources: new(sys:Resources)
           - $.environment.reporter.report($this, 'Stackato VM is created')
           - $.setAttr(deployed, true)
-          - $.environment.reporter.report($this, 'host IP is ' + $.host)
+          - $.environment.reporter.report($this, 'floating IP is ' + $.host)
 
   renameHost:
     Arguments:
       core_ip:
         Contract: $.string().notNull()
     Body:
-      - $.environment.reporter.report($this, 'renamehost ' + $core_ip)
+      - $.environment.reporter.report($this, 'rename host to ' + $core_ip)
       - $resources: new(sys:Resources)
       - $template: $resources.yaml('RenameHost.template').bind(dict(
           core_ip => $core_ip

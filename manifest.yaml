@@ -3,8 +3,8 @@ Type: Application
 FullName: io.murano.apps.activestate.StackatoNode
 Name: Stackato Node
 Description: |
- Stackato Microcloud
-Author: 'Mirantis, Inc'
-Tags: [test]
+ Stackato Microcloud v1.0
+Author: 'Mirantis, Inc and ActiveState'
+Tags: [stackato microcloud node]
 Classes:
  io.murano.apps.activestate.StackatoNode: StackatoNode.yaml
