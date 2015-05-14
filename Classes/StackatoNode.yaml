@@ -1,0 +1,104 @@
+Namespaces:
+  =: io.murano.apps.activestate
+  std: io.murano
+  res: io.murano.resources
+  sys: io.murano.system
+  apps: io.murano.apps
+
+
+Name: StackatoNode
+
+Extends: std:Application
+
+Properties:
+  name:
+    Contract: $.string().notNull()
+
+  instance:
+    Contract: $.class(res:Instance).notNull()
+
+  useXip:
+    Contract: $.bool().notNull()
+    Default: true
+
+  host:
+    Contract: $.string()
+    Usage: Out
+
+Workflow:
+  initialize:
+    Body:
+      - $.environment: $.find(std:Environment).require()
+
+  deploy:
+    Body:
+      - If: not $.getAttr(deployed, false)
+        Then:
+          - $.environment.reporter.report($this, 'Creating a VM ')
+          - $securityGroupIngress:
+              - ToPort: 22
+                FromPort: 22
+                IpProtocol: tcp
+                External: True
+              - ToPort: 80
+                FromPort: 80
+                IpProtocol: tcp
+                External: True
+              - ToPort: 443
+                FromPort: 443
+                IpProtocol: tcp
+                External: True
+          - $.environment.securityGroupManager.addGroupIngress($securityGroupIngress)
+          - $.instance.deploy()
+          - $.host: $.instance.floatingIpAddress
+          - $.renameHost(
+              core_ip => $.host
+              )
+          - $resources: new(sys:Resources)
+          - $.environment.reporter.report($this, 'Stackato VM is created')
+          - $.setAttr(deployed, true)
+          - $.environment.reporter.report($this, 'host IP is ' + $.host)
+
+  renameHost:
+    Arguments:
+      core_ip:
+        Contract: $.string().notNull()
+    Body:
+      - $.environment.reporter.report($this, 'renamehost ' + $core_ip)
+      - $resources: new(sys:Resources)
+      - $template: $resources.yaml('RenameHost.template').bind(dict(
+          core_ip => $core_ip
+          ))
+      - $.instance.agent.call($template, $resources)
+      - $.environment.reporter.report($this, 'done renamehost ' + $core_ip)
+
+
+  setupNode:
+    Arguments:
+      role:
+        Contract: $.string().notNull()
+      core_ip:
+        Contract: $.string().notNull()
+      apiURL:
+        Contract: $.string().notNull()
+    Body:
+      - $.environment.reporter.report($this, 'Configuring Stackato role:' + $role)
+      - $resources: new(sys:Resources)
+      - $template: $resources.yaml('AttachNode.template').bind(dict(
+          role => $role,
+          core_ip => $core_ip,
+          apiURL => $apiURL
+          ))
+      - $.instance.agent.call($template, $resources)
+
+  setupRole:
+    Arguments:
+      role:
+        Contract: $.string().notNull()
+    Body:
+      - $.environment.reporter.report($this, 'Configuring Stackato role:' + $role)
+      - $resources: new(sys:Resources)
+      - $template: $resources.yaml('InstallRole.template').bind(dict(
+          role => $role
+          ))
+      - $.instance.agent.call($template, $resources)

@@ -1,0 +1,19 @@
+FormatVersion: 2.0.0
+Version: 1.0.0
+Name: Rename Stackato node
+
+Parameters:
+  core_ip: $core_ip
+
+Body: |
+  return renameHost('{0}'.format(args.core_ip)).stdout
+
+Scripts:
+  renameHost:
+    Type: Application
+    Version: 1.0.0
+    EntryPoint: renameHost.sh
+    Files: []
+    Options:
+      captureStdout: true
+      captureStderr: true

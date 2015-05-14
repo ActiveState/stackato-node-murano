@@ -1,0 +1,20 @@
+FormatVersion: 2.0.0
+Version: 1.0.0
+Name: Install Stackato Role
+
+Parameters:
+  role: $role
+
+
+Body: |
+  return installRole('{0}'.format(args.role)).stdout
+
+Scripts:
+  installRole:
+    Type: Application
+    Version: 1.0.0
+    EntryPoint: installRole.sh
+    Files: []
+    Options:
+      captureStdout: true
+      captureStderr: true

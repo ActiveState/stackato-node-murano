@@ -1,0 +1,22 @@
+FormatVersion: 2.0.0
+Version: 1.0.0
+Name: Attach Stackato node
+
+Parameters:
+  role: $role
+  core_ip: $core_ip
+  apiURL: $apiURL
+
+
+Body: |
+  return attachNode('{0} {1} {2}'.format(args.role, args.core_ip, args.apiURL)).stdout
+
+Scripts:
+  attachNode:
+    Type: Application
+    Version: 1.0.0
+    EntryPoint: attachNode.sh
+    Files: []
+    Options:
+      captureStdout: true
+      captureStderr: true
