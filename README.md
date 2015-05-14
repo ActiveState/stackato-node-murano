@@ -2,5 +2,5 @@
 
 OpenStack Murano package to deploy Stackato Microcloud
 
-# Awesome!
+
 
