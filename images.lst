@@ -1,0 +1,8 @@
+- Name: 'stackato-node-murano-v1.qcow2'
+  Hash: '7a7baf53a90c1afd9bb375bf7b26af5b'
+  Meta:
+    title: 'stackato-node-murano-v1'
+    type: 'linux'
+  DiskFormat: qcow2
+  ContainerFormat: bare
+  Url: 'http://downloads.activestate.com/stackato/vm/v3.4.2/stackato-node-murano-v1.qcow2'
